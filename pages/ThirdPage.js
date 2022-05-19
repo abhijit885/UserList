@@ -9,71 +9,40 @@ import UserCard from '../Components/UserCard'
 import Icon from 'react-native-vector-icons/Feather';
 import { FAB } from 'react-native-paper';
 import { ScrollView } from 'react-native-gesture-handler';
+import { useSelector } from 'react-redux';
 
 const ThirdPage = ({ navigation, route }) => {
-    const navigateTodayLessonScreen = props =>
+    const navigateToSecondPage = props =>
         navigation.navigate('SecondPage');
-    const listData = [
-        {
-            id: 1,
-            title: "careful",
-            subtitle: 'manager',
-            fevorite: 'true'
-        },
-        {
-            id: 2,
-            title: "careful",
-            subtitle: 'manager',
-            fevorite: 'true'
-        },
-        {
-            id: 3,
-            title: "careful",
-            subtitle: 'manager',
-            fevorite: 'true'
-        },
-        {
-            id: 4,
-            title: "careful",
-            subtitle: 'manager',
-            fevorite: 'true'
-        },
-        {
-            id: 5,
-            title: "careful",
-            subtitle: 'manager',
-            fevorite: 'true'
-        },
-        {
-            id: 6,
-            title: "careful",
-            subtitle: 'manager',
-            fevorite: 'true'
-        },
-        {
-            id: 7,
-            title: "careful",
-            subtitle: 'manager',
-            fevorite: 'true'
-        },
-        {
-            id: 8,
-            title: "careful",
-            subtitle: 'manager',
-            fevorite: 'true'
-        },
-    ];
+
+    const employee = useSelector(state => state.user);
+
+    function compareFirstName(a, b) {
+        if (a.firstName < b.firstName) {
+            return -1;
+        } else if (a.firstName > b.firstName) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+
+
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#ffffff' }}>
             <ScrollView>
                 {
-                    listData.map((item) => {
+                    employee?.slice().sort(compareFirstName).map((item) => {
                         return (
                             <UserCard
-                                title={item.title}
-                                subtitle={item.subtitle}
-                            //left={}
-                            //right={}
+                                key={item.id}
+                                firstName={item.firstName}
+                                lastName={item.lastName}
+                                id={item.id}
+                                jobTitle={item.jobTitle}
+                                salary={item.salary}
+                                fav={item.fav}
                             />
                         );
                     })
@@ -84,7 +53,7 @@ const ThirdPage = ({ navigation, route }) => {
                     style={styles.fab}
                     large
                     icon="plus"
-                    onPress={navigateTodayLessonScreen}
+                    onPress={navigateToSecondPage}
                 />
             </View>
         </SafeAreaView>
