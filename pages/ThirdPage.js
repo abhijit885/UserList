@@ -26,9 +26,6 @@ const ThirdPage = ({ navigation, route }) => {
             return 0;
         }
     }
-
-
-
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#ffffff' }}>
             <ScrollView>
@@ -53,6 +50,7 @@ const ThirdPage = ({ navigation, route }) => {
                     style={styles.fab}
                     large
                     icon="plus"
+                    color='#ffffff'
                     onPress={navigateToSecondPage}
                 />
             </View>

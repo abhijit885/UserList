@@ -97,16 +97,13 @@ function MyDrawer() {
   );
 }
 const NavigationDrawerStructure = (props) => {
-  //Structure for the navigatin Drawer
   const toggleDrawer = () => {
-    //Props to open/close the drawer
     props.navigationProps.toggleDrawer();
   };
 
   return (
     <View style={{ flexDirection: 'row' }}>
       <TouchableOpacity onPress={() => toggleDrawer()}>
-        {/*Donute Button Image */}
         <Image
           source={{ uri: 'https://raw.githubusercontent.com/AboutReact/sampleresource/master/drawerWhite.png' }}
           style={{
@@ -174,11 +171,11 @@ function FirstScreenStack({ navigation }) {
               navigationProps={navigation}
             />,
           headerStyle: {
-            backgroundColor: '#4cb04f', //Set Header color
+            backgroundColor: '#4cb04f',
           },
-          headerTintColor: '#fff', //Set Header text color
+          headerTintColor: '#fff',
           headerTitleStyle: {
-            fontWeight: 'bold', //Set Header text style
+            fontWeight: 'bold',
           },
           title: 'Index',
         }}

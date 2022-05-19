@@ -21,7 +21,6 @@ const UserCard = (props) => {
                         fontSize: 23,
                         color: '#000000',
                         fontWeight: 'bold',
-                        // fontFamily: ,
                         textTransform: 'uppercase',
                     }}>{props?.firstName?.slice(0, 2)}</Text>
                 </View>
@@ -31,7 +30,6 @@ const UserCard = (props) => {
                             fontSize: 14,
                             color: '#000000',
                             fontWeight: 'bold',
-                            // fontFamily: ,
                             textTransform: 'capitalize',
                         }}>
                         {props.firstName} {props.lastName}
@@ -69,7 +67,6 @@ const UserCard = (props) => {
             <View
                 style={{
                     height: 45,
-                    //backgroundColor: 'pink',
                     borderWidth: 0,
                     width: 45,
                     marginLeft: -26,
@@ -123,7 +120,6 @@ const styles = StyleSheet.create({
         width: 50,
         borderRadius: 100,
         backgroundColor: '#4cb04f',
-        //borderWidth: 1,
         borderStyle: 'solid',
         alignItems: 'center',
         justifyContent: 'center',

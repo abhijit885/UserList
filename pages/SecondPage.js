@@ -8,7 +8,6 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { TextInput, Text } from 'react-native-paper';
 import { addEmployee } from '../store/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SecondPage = ({ navigation, route }) => {
     const [firstName, setFirstName] = React.useState("");
@@ -20,9 +19,7 @@ const SecondPage = ({ navigation, route }) => {
         navigation.navigate('ThirdPage');
     const dispatch = useDispatch();
 
-
     const handleSave = params => {
-        //  Keyboard.dismiss();
         if (firstName && lastName && jobTitle && salary) {
             dispatch(addEmployee({
                 id: Math.floor(Math.random() * 100000), firstName, lastName, jobTitle, salary, fav: false
@@ -31,9 +28,11 @@ const SecondPage = ({ navigation, route }) => {
             setLastName('')
             setJobTitle('')
             setSalary('')
+            navigateToDataList()
+
+        } else if (firstName == '' && lastName == '' && jobTitle == '' && salary == '') {
+            alert("please fill the fields")
         }
-        // AsyncStorage.setItem(Data, JSON.stringify(params));
-        navigateToDataList()
     };
 
     return (
@@ -53,7 +52,6 @@ const SecondPage = ({ navigation, route }) => {
                     <TextInput
                         label="Last Name"
                         value={lastName}
-                        //onChangeText={text => setText(text)}
                         style={styles.textInputLabel}
                         onChangeText={setLastName}
                         activeUnderlineColor={'#75c145'}
@@ -61,7 +59,6 @@ const SecondPage = ({ navigation, route }) => {
                     <TextInput
                         label="Job Title"
                         value={jobTitle}
-                        //onChangeText={text => setText(text)}
                         style={styles.textInputLabel}
                         onChangeText={setJobTitle}
                         activeUnderlineColor={'#75c145'}
@@ -69,7 +66,6 @@ const SecondPage = ({ navigation, route }) => {
                     <TextInput
                         label="Salary"
                         value={salary}
-                        //onChangeText={text => setText(text)}
                         style={styles.textInputLabel}
                         onChangeText={setSalary}
                         keyboardType='number-pad'
@@ -91,7 +87,6 @@ const SecondPage = ({ navigation, route }) => {
 }
 const styles = StyleSheet.create({
     inputContainer: {
-        //paddingBottom: 2,
     },
     textInputLabel: {
         marginVertical: 10
