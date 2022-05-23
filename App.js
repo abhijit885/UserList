@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   Image, useWindowDimensions, StyleSheet
 } from 'react-native';
-
+import { addUser, login, logout, selectUser } from './store/userSlice';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import {
@@ -17,118 +17,18 @@ import {
   DrawerItemList,
   DrawerItem,
 } from '@react-navigation/drawer';
-
-import FirstPage from './pages/FirstPage';
-import SecondPage from './pages/SecondPage';
-import ThirdPage from './pages/ThirdPage';
+import auth from '@react-native-firebase/auth';
+import RegisterPage from './pages/RegisterScreen';
+import LoginPage from './pages/LoginScreen';
+import DashboardPage from './pages/DashboardScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDispatch, useSelector } from 'react-redux';
-import { addAllEmployee, addEmployee } from './store/userSlice';
 import { ActivityIndicator } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Entypo';
 
 const Stack = createStackNavigator();
-const Drawer = createDrawerNavigator();
-function CustomDrawerContent(props) {
-  const width = useWindowDimensions().width * 0.31;
-  const employee = useSelector(state => state.user);
 
-  const favorite = employee.filter(item => item.fav == true)?.length
 
-  return (
-    <DrawerContentScrollView {...props}>
-      <View style={styles.menuContainer}>
-        <View
-          style={[
-            styles.menuItemsCard,
-            { backgroundColor: '#EFFFD5', width: width, height: width },
-          ]}>
-          <View
-            style={[styles.circleContainer, { backgroundColor: '#b5ff39', alignItems: 'center', justifyContent: 'center' }]}>
-            <Text style={{ fontSize: 22, fontWeight: 'bold' }}>{employee?.length}</Text>
-
-          </View>
-
-          <DrawerItem
-            style={{
-              position: 'absolute',
-              left: 0,
-              width: width,
-              height: width,
-            }}
-            label="Total Employee"
-            labelStyle={{ color: '#609806' }}
-          />
-        </View>
-        <View
-          style={[
-            styles.menuItemsCard,
-            { backgroundColor: '#EFFFD5', width: width, height: width },
-          ]}>
-          <View
-            style={[styles.circleContainer, { backgroundColor: '#b5ff39', alignItems: 'center', justifyContent: 'center' }]}>
-
-            <Text style={{ fontSize: 22, fontWeight: 'bold' }}>{favorite}</Text>
-          </View>
-
-          <DrawerItem
-            style={{
-              position: 'absolute',
-              left: 0,
-              width: width,
-              height: width,
-            }}
-            label="Total Favorite"
-            labelStyle={{ color: '#609806' }}
-          />
-        </View>
-      </View>
-    </DrawerContentScrollView >
-  );
-}
-function MyDrawer() {
-  return (
-    <Drawer.Navigator
-      drawerContent={(props) => <CustomDrawerContent {...props} />}>
-      <Drawer.Screen name="firstScreenStack" options={{
-        headerShown: false, // change this to `false`
-      }} component={FirstScreenStack} />
-    </Drawer.Navigator>
-  );
-}
-const NavigationDrawerStructure = (props) => {
-  const toggleDrawer = () => {
-    props.navigationProps.toggleDrawer();
-  };
-
-  return (
-    <View style={{ flexDirection: 'row' }}>
-      <TouchableOpacity onPress={() => toggleDrawer()}>
-        <Image
-          source={{ uri: 'https://raw.githubusercontent.com/AboutReact/sampleresource/master/drawerWhite.png' }}
-          style={{
-            width: 25,
-            height: 25,
-            marginLeft: 5
-          }}
-        />
-      </TouchableOpacity>
-    </View>
-  );
-}
-const NavigationDrawerStructureRight = (props) => {
-  const toggleDrawer = () => {
-    props.navigationProps.toggleDrawer();
-  };
-
-  return (
-    <View style={{ flexDirection: 'row' }}>
-      <TouchableOpacity >
-        <Icon name='dots-three-vertical' size={25} color='#ffffff' />
-      </TouchableOpacity>
-    </View>
-  );
-}
 
 const SplashScreen = () => {
 
@@ -139,37 +39,37 @@ const SplashScreen = () => {
   )
 }
 
-function FirstScreenStack({ navigation }) {
-
-  const employee = useSelector(state => state.user);
+function AuthStack() {
 
   return (
-    <Stack.Navigator initialRouteName={employee?.length == 0 ? 'FirstPage' : 'ThirdPage'}>
+    <Stack.Navigator initialRouteName={'LoginPage'}>
       <Stack.Screen
-        name="FirstPage"
-        component={FirstPage}
+        name="RegisterPage"
+        component={RegisterPage}
         options={{
           headerShown: false,
           swipeEnabled: false,
           headerLeft: null,
         }} />
       <Stack.Screen
-        name="SecondPage"
-        component={SecondPage}
+        name="LoginPage"
+        component={LoginPage}
         options={{
           headerShown: false,
         }}
       />
+    </Stack.Navigator>
+  );
+}
+
+function AppStack() {
+
+  return (
+    <Stack.Navigator initialRouteName={'DashboardPage'}>
+
       <Stack.Screen
         options={{
-          headerLeft: () =>
-            <NavigationDrawerStructure
-              navigationProps={navigation}
-            />,
-          headerRight: () =>
-            <NavigationDrawerStructureRight
-              navigationProps={navigation}
-            />,
+
           headerStyle: {
             backgroundColor: '#4cb04f',
           },
@@ -177,10 +77,10 @@ function FirstScreenStack({ navigation }) {
           headerTitleStyle: {
             fontWeight: 'bold',
           },
-          title: 'Index',
+          title: 'Dashboard',
         }}
-        name="ThirdPage"
-        component={ThirdPage}
+        name="DashboardPage"
+        component={DashboardPage}
       />
     </Stack.Navigator>
   );
@@ -190,33 +90,44 @@ function FirstScreenStack({ navigation }) {
 function App() {
 
   const dispatch = useDispatch();
-  const [screenRender, setScreenRender] = React.useState(false)
+
+  const [initializing, setInitializing] = React.useState(true);
+
+  const { user } = useSelector(state => state);
+
+  const authenticate = user?.email
+
 
   React.useEffect(() => {
     let isSubscribe = true;
 
     if (isSubscribe) {
-      const getEmployee = async () => {
-        await AsyncStorage.getItem('employee').then((res) => {
+      const getUser = async () => {
+        await AsyncStorage.getItem('userKey').then((res) => {
           if (res != null) {
-            console.log(res)
-            dispatch(addAllEmployee(JSON.parse(res)));
-            setScreenRender(true)
+            dispatch(addUser(JSON.parse(res)));
+            setTimeout(() => {
+              if (initializing) setInitializing(false);
+            }, 500)
           }
-          else setScreenRender(true)
+          else setInitializing(false);
         })
       }
-      getEmployee()
+      getUser()
     }
 
     return () => {
       isSubscribe = false;
     }
   }, []);
+
+
+
+  if (initializing) return <SplashScreen />;
+
   return (
     <NavigationContainer>
-      {screenRender && <MyDrawer />}
-      {!screenRender && <SplashScreen />}
+      {!authenticate ? <AuthStack /> : <AppStack />}
     </NavigationContainer>
   );
 }
