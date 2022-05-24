@@ -15,17 +15,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const DashboardScreen = ({ navigation, route }) => {
 
-
     const dispatch = useDispatch()
     const { displayName, email } = useSelector(state => state.user);
-
-
 
     const handleLogout = () => {
         dispatch(logout());
         AsyncStorage.removeItem('userKey')
     }
-
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#ffffff' }}>
@@ -45,14 +41,6 @@ const DashboardScreen = ({ navigation, route }) => {
         </SafeAreaView>
     );
 }
-const styles = StyleSheet.create({
-    fab: {
-        position: 'absolute',
-        margin: 16,
-        right: 0,
-        bottom: 0,
 
-    },
-})
 
 export default DashboardScreen;

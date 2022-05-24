@@ -38,12 +38,8 @@ const RegisterScreen = ({ navigation, route }) => {
                     displayName: name
                 })
                 console.log('User registered successfully!')
-                // setEmail('')
-                // setPassword('')
                 navigation.navigate('LoginPage')
             }).catch(error => console.log("error", error))
-        console.log('hi', params)
-
     }
 
     return (

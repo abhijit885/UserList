@@ -29,8 +29,6 @@ import LottieView from 'lottie-react-native';
 
 const Stack = createStackNavigator();
 
-
-
 const SplashScreen = () => {
 
   return (

@@ -9,8 +9,8 @@ import {
 } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { TextInput, Text } from 'react-native-paper';
-import { addEmployee, addUser } from '../store/userSlice';
-import { useDispatch, useSelector } from 'react-redux';
+import { addUser } from '../store/userSlice';
+import { useDispatch } from 'react-redux';
 import auth from '@react-native-firebase/auth';
 import { Formik } from 'formik';
 import { useValidation } from '../hooks/useValidation';
@@ -51,7 +51,6 @@ const LoginScreen = ({ navigation, route }) => {
                     Sign in
                 </Text></View>
 
-                {/* <View style={styles.inputContainer}> */}
                 <Formik
                     validationSchema={signInSchemes}
                     enableReinitialize={true}
@@ -139,8 +138,6 @@ const LoginScreen = ({ navigation, route }) => {
     );
 }
 const styles = StyleSheet.create({
-    inputContainer: {
-    },
     textInputLabel: {
         marginVertical: 10,
         backgroundColor: "#fff"
