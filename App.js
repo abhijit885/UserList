@@ -25,6 +25,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDispatch, useSelector } from 'react-redux';
 import { ActivityIndicator } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Entypo';
+import LottieView from 'lottie-react-native';
 
 const Stack = createStackNavigator();
 
@@ -33,8 +34,12 @@ const Stack = createStackNavigator();
 const SplashScreen = () => {
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <ActivityIndicator size={'big'} color={'green'} />
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#ffffff' }}>
+      <LottieView
+        source={require('./assets/loading.json')}
+        autoPlay
+        loop
+      />
     </View>
   )
 }
@@ -108,7 +113,7 @@ function App() {
             dispatch(addUser(JSON.parse(res)));
             setTimeout(() => {
               if (initializing) setInitializing(false);
-            }, 500)
+            }, 800)
           }
           else setInitializing(false);
         })
@@ -131,28 +136,5 @@ function App() {
     </NavigationContainer>
   );
 }
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  menuContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-  },
-  menuItemsCard: {
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 10,
-  },
-  circleContainer: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    padding: 10,
-  },
-});
+
 export default App;
